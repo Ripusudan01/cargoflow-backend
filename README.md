@@ -1,12 +1,40 @@
-# Small Business Operations Platform (CargoFlow) – Backend
+# Small Business Operations Platform (CargoFlow)
 
-This is the **FastAPI backend** for a Small Business Operations Platform that manages shipments, delivery agents and business clients.
+A scalable **FastAPI backend** for managing shipments, delivery agents, business clients, real-time tracking, and AI-powered chatbot support for logistics operations.
 
 ---
 
-## Setup Instructions
+## Features
 
-### 1. Clone the repository
+* JWT Authentication & Authorization
+* Role-Based Access Control
+* Shipment Management
+* Delivery Agent Management
+* Business Client Management
+* Live Location Tracking for Agents
+* Shipment Status Updates by Agents
+* Public Shipment Tracking
+* AI Chatbot with Knowledge Base Support
+* RESTful APIs with Swagger Documentation
+
+---
+
+## Tech Stack
+
+* **Backend Framework:** FastAPI
+* **Database:** PostgreSQL
+* **ORM:** SQLAlchemy
+* **Authentication:** JWT Bearer Token
+* **Package Manager:** uv
+* **Testing:** Pytest
+* **AI Integration:** Hugging Face API
+* **Email Service:** Brevo API
+
+---
+
+# Project Setup
+
+## 1. Clone Repository
 
 ```bash
 git clone <your-repo-url>
@@ -15,21 +43,29 @@ cd backend
 
 ---
 
-### 2. Create virtual environment (uv)
+## 2. Create Virtual Environment
 
 ```bash
 uv venv
+```
 
-# Activate (Windows)
+### Activate Environment
+
+#### Windows
+
+```bash
 .venv\Scripts\activate
+```
 
-# Activate (Mac/Linux)
+#### Mac/Linux
+
+```bash
 source .venv/bin/activate
 ```
 
 ---
 
-### 3. Install dependencies
+## 3. Install Dependencies
 
 ```bash
 uv sync
@@ -37,9 +73,9 @@ uv sync
 
 ---
 
-### 4. Configure Environment Variables
+## 4. Configure Environment Variables
 
-Create a ```.env``` file in the root directory:
+Create a `.env` file in the project root:
 
 ```env
 DATABASE_URL=postgresql://<username>:<password>@localhost:5432/<db_name>
@@ -58,7 +94,7 @@ BREVO_API_KEY=your_brevo_api_key
 
 ---
 
-### 5. Run the server
+## 5. Run Development Server
 
 ```bash
 uvicorn app.main:app --reload
@@ -66,15 +102,23 @@ uvicorn app.main:app --reload
 
 ---
 
-### 6. Access API docs
+## 6. API Documentation
+
+### Swagger UI
 
 ```
 http://127.0.0.1:8000/docs
 ```
 
+### ReDoc
+
+```
+http://127.0.0.1:8000/redoc
+```
+
 ---
 
-## 7. Running Tests
+## 7. Run Tests
 
 ```bash
 pytest -v
@@ -82,10 +126,28 @@ pytest -v
 
 ---
 
-## Roles in System
+# Authentication
 
-| Role            | Permissions                        |
-| --------------- | ---------------------------------- |
-| Admin           | Manage shipments, agents, clients  |
-| Delivery Agent  | Deliver shipments, update location |
-| Business Client | Create & track shipments           |
+The backend uses **JWT Bearer Authentication**.
+
+After login, include the token in all protected request headers:
+
+```http
+Authorization: Bearer <your_token>
+```
+
+---
+
+# Roles & Permissions
+
+| Role            | Permissions                                                           |
+| --------------- | --------------------------------------------------------------------- |
+| Admin           | Manage shipments, delivery agents, business clients     |
+| Delivery Agent  | Update shipment status, update live location, request duty status     |
+| Business Client | Create & track shipments, manage business profile                     |
+
+---
+
+# License
+
+This project is developed for educational and business operations management purposes.
