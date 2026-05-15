@@ -1,0 +1,329 @@
+============================================================
+CARGOFLOW LOGISTICS
+AI CHATBOT KNOWLEDGE BASE
+=========================
+
+---
+
+## [Topic: Company Overview]
+
+CargoFlow is a modern logistics and delivery service provider offering fast, reliable, and affordable shipping solutions.
+
+We support:
+
+* Individuals
+* Businesses
+* E-commerce sellers
+
+Our services include parcel delivery, express shipping, and last-mile logistics.
+
+Our mission is to deliver packages safely, quickly, and transparently.
+
+Common queries:
+
+* what is cargoflow
+* tell me about your company
+* about company
+
+---
+
+## [Topic: Services Overview]
+
+CargoFlow offers multiple delivery services:
+
+1. Standard Delivery
+2. Express Delivery
+3. Same-Day Delivery
+4. Freight Services
+5. E-commerce Fulfillment
+
+Common queries:
+
+* what services do you offer
+* available delivery services
+* shipping options
+
+---
+
+## [Topic: Standard Delivery]
+
+Standard delivery usually takes 3–5 business days within the country.
+
+Best for:
+
+* Non-urgent parcels
+* Documents
+* Small packages
+
+Maximum weight: 30 kg
+
+Common queries:
+
+* normal delivery time
+* standard shipping duration
+* how long standard delivery takes
+
+---
+
+## [Topic: Express Delivery]
+
+Express delivery takes 1–2 business days.
+
+Suitable for urgent and time-sensitive shipments.
+
+Common queries:
+
+* fast delivery
+* urgent shipping
+* express delivery time
+
+---
+
+## [Topic: Same Day Delivery]
+
+CargoFlow offers same-day delivery within selected cities.
+
+Delivery is completed within a few hours depending on distance and traffic.
+
+Common queries:
+
+* same day delivery
+* fastest delivery option
+* immediate delivery
+
+---
+
+## [Topic: Pricing]
+
+CargoFlow pricing is simple and transparent.
+
+Base pricing:
+
+* ₹45 per kg for standard delivery
+
+Examples:
+
+* 1 kg = ₹45
+* 5 kg = ₹225
+* 10 kg = ₹450
+
+Additional charges may apply for:
+
+* Express delivery
+* Same-day delivery
+* Insurance
+
+Example queries:
+
+* cost for 5 kg
+* shipping price
+* delivery charges
+* how much cost
+
+---
+
+## [Topic: Tracking]
+
+You can track your shipment using a tracking ID.
+
+Example tracking ID:
+CF-12345678-1234
+
+Tracking statuses:
+
+* Order Received
+* Picked Up
+* In Transit
+* Out for Delivery
+* Delivered
+
+If tracking is not updated, wait up to 24 hours after pickup.
+
+Common queries:
+
+* track shipment
+* where is my order
+* tracking status
+* shipment status
+
+---
+
+## [Topic: Pickup Service]
+
+CargoFlow offers home pickup service.
+
+You need to provide:
+
+* Pickup address
+* Package details
+* Preferred time slot
+
+Common queries:
+
+* schedule pickup
+* home pickup
+* arrange pickup
+
+---
+
+## [Topic: Delivery Issues]
+
+If delivery fails:
+
+* The delivery agent will retry
+* Package may be held at a nearby facility
+* You can reschedule delivery
+
+Common queries:
+
+* delivery failed
+* not delivered
+* missed delivery
+
+---
+
+## [Topic: Prohibited Items]
+
+Not allowed items:
+
+* Explosives or flammable materials
+* Weapons or ammunition
+* Illegal drugs
+* Hazardous chemicals
+
+Some restricted items require approval.
+
+Common queries:
+
+* restricted items
+* what cannot be shipped
+* prohibited goods
+
+---
+
+## [Topic: Refund and Claims]
+
+If shipment is lost or damaged:
+
+* You can file a claim
+* Provide tracking ID and proof
+
+Refunds are processed if CargoFlow is responsible.
+
+Common queries:
+
+* refund
+* damaged shipment
+* lost package
+
+---
+
+## [Topic: FAQ - Delivery Time]
+
+Delivery timelines:
+
+* Standard: 3–5 days
+* Express: 1–2 days
+* Same-day: few hours
+
+Common queries:
+
+* delivery time
+* when will my parcel arrive
+
+---
+
+## [Topic: FAQ - Address Change]
+
+You can change the delivery address before pickup.
+
+After dispatch, changes may cause delays or extra charges.
+
+Common queries:
+
+* change address
+* update delivery address
+
+---
+
+## [Topic: FAQ - Missed Delivery]
+
+If you are not available:
+
+* Delivery will be attempted again
+* You can reschedule
+
+Common queries:
+
+* missed delivery
+* not at home
+
+---
+
+## [Topic: FAQ - Pricing]
+
+Shipping cost is ₹45 per kg for standard delivery.
+
+Final cost depends on:
+
+* Weight
+* Speed
+* Distance
+
+Common queries:
+
+* shipping cost
+* how much price
+
+---
+
+## [Topic: Contact Support]
+
+You can contact CargoFlow support using the following:
+
+Helpline Number: +91-9876543210  
+Email: support@cargoflow.com  
+
+Support is available for:
+
+* Shipment tracking issues  
+* Delivery problems  
+* Refund and claims  
+* General queries  
+
+Common queries:
+
+* contact support  
+* customer care number  
+* helpline number  
+* support number  
+* contact number  
+* email support  
+* support email  
+* how to contact cargoflow  
+* how can I reach support  
+* customer care email
+* how do I contact support  
+* how to call cargoflow  
+* customer care contact      
+
+---
+
+## [Topic: Chatbot Help]
+
+I can help you with:
+
+* Tracking your shipment using tracking ID
+* Calculating shipping cost
+* Delivery timelines
+* Logistics-related queries
+
+Try asking:
+
+* track CF-12345678-1234
+* cost for 5 kg
+* delivery time
+
+---
+
+## END OF KNOWLEDGE BASE
