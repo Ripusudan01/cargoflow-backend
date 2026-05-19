@@ -12,9 +12,9 @@ A scalable **FastAPI backend** for managing shipments, delivery agents, business
 * Delivery Agent Management
 * Business Client Management
 * Live Location Tracking for Agents
-* Shipment Status Updates by Agents
+* Real-time Shipment Status Updates
 * Public Shipment Tracking
-* AI Chatbot with Knowledge Base Support
+* AI-powered RAG Chatbot with Knowledge Base Retrieval
 * RESTful APIs with Swagger Documentation
 
 ---
@@ -28,6 +28,8 @@ A scalable **FastAPI backend** for managing shipments, delivery agents, business
 * **Package Manager:** uv
 * **Testing:** Pytest
 * **AI Integration:** Hugging Face API
+* **Vector Embeddings:** Hugging Face Embeddings
+* **AI Pipeline:** Retrieval-Augmented Generation (RAG)
 * **Email Service:** Brevo API
 
 ---
@@ -104,17 +106,8 @@ uvicorn app.main:app --reload
 
 ## 6. API Documentation
 
-### Swagger UI
-
-```
-http://127.0.0.1:8000/docs
-```
-
-### ReDoc
-
-```
-http://127.0.0.1:8000/redoc
-```
+- Swagger UI: http://127.0.0.1:8000/docs
+- ReDoc: http://127.0.0.1:8000/redoc
 
 ---
 
