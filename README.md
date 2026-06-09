@@ -40,7 +40,7 @@ A scalable **FastAPI backend** for managing shipments, delivery agents, business
 
 ```bash
 git clone <your-repo-url>
-cd backend
+cd cargoflow-backend
 ```
 
 ---
