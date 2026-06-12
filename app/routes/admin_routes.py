@@ -618,6 +618,12 @@ def assign_agent(shipment_id: int,
     if not shipment:
         raise HTTPException(status_code=404, detail="Shipment not found")
 
+    if shipment.status != ShipmentStatus.CREATED:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Shipment cannot be assigned from status {shipment.status.value}"
+        )
+
     agent = db.query(User).filter(User.id == agent_id,
                                   User.role == UserRole.DELIVERY_AGENT,
                                   User.is_active == True,

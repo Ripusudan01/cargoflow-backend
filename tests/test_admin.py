@@ -1,5 +1,17 @@
 import uuid
 
+import pytest
+
+from app.database import SessionLocal
+from app.models import (
+    Address,
+    AgentDutyStatus,
+    Shipment,
+    ShipmentStatus,
+    User,
+    UserRole,
+)
+
 # ---------------- DASHBOARD ----------------
 
 def test_admin_dashboard(client):
@@ -48,6 +60,122 @@ def test_create_shipment_invalid_sender(client):
 def test_assign_agent_invalid(client):
     res = client.post("/api/v1/admin/shipments/999/assign/999")
     assert res.status_code == 404
+
+
+def _create_assignment_case(status: ShipmentStatus):
+    db = SessionLocal()
+    try:
+        suffix = uuid.uuid4()
+
+        client_user = User(
+            name="Client",
+            email=f"client_{suffix}@test.com",
+            phone="999",
+            city="C",
+            password_hash="test",
+            role=UserRole.BUSINESS_CLIENT,
+            is_active=True
+        )
+        initial_agent = User(
+            name="Initial Agent",
+            email=f"initial_agent_{suffix}@test.com",
+            phone="999",
+            city="C",
+            password_hash="test",
+            role=UserRole.DELIVERY_AGENT,
+            is_active=True,
+            duty_status=AgentDutyStatus.ON_DUTY
+        )
+        target_agent = User(
+            name="Target Agent",
+            email=f"target_agent_{suffix}@test.com",
+            phone="999",
+            city="C",
+            password_hash="test",
+            role=UserRole.DELIVERY_AGENT,
+            is_active=True,
+            duty_status=AgentDutyStatus.ON_DUTY
+        )
+        db.add_all([client_user, initial_agent, target_agent])
+        db.flush()
+
+        pickup = Address(
+            line1="Pickup",
+            city="C",
+            state="S",
+            pincode="1",
+            latitude=0,
+            longitude=0
+        )
+        delivery = Address(
+            line1="Delivery",
+            city="D",
+            state="S",
+            pincode="2",
+            latitude=0,
+            longitude=0
+        )
+        db.add_all([pickup, delivery])
+        db.flush()
+
+        shipment = Shipment(
+            tracking_number=f"CF-TEST-{suffix}",
+            sender_id=client_user.id,
+            receiver_name="Receiver",
+            receiver_phone="123",
+            receiver_email="receiver@test.com",
+            pickup_address_id=pickup.id,
+            delivery_address_id=delivery.id,
+            weight=1,
+            price=10,
+            status=status,
+            assigned_agent_id=(
+                initial_agent.id
+                if status != ShipmentStatus.CREATED
+                else None
+            )
+        )
+        db.add(shipment)
+        db.commit()
+
+        return shipment.id, target_agent.id
+    finally:
+        db.close()
+
+
+def _get_shipment(shipment_id: int):
+    db = SessionLocal()
+    try:
+        return db.query(Shipment).filter(Shipment.id == shipment_id).first()
+    finally:
+        db.close()
+
+
+def test_assign_created_shipment_success(client):
+    shipment_id, target_agent_id = _create_assignment_case(ShipmentStatus.CREATED)
+
+    res = client.post(f"/api/v1/admin/shipments/{shipment_id}/assign/{target_agent_id}")
+
+    assert res.status_code == 200
+
+    shipment = _get_shipment(shipment_id)
+    assert shipment.status == ShipmentStatus.ASSIGNED
+    assert shipment.assigned_agent_id == target_agent_id
+
+
+@pytest.mark.parametrize("status", [
+    ShipmentStatus.ASSIGNED,
+    ShipmentStatus.OUT_FOR_DELIVERY,
+    ShipmentStatus.DELIVERED,
+    ShipmentStatus.FAILED,
+])
+def test_assign_non_created_shipment_returns_400(client, status):
+    shipment_id, target_agent_id = _create_assignment_case(status)
+
+    res = client.post(f"/api/v1/admin/shipments/{shipment_id}/assign/{target_agent_id}")
+
+    assert res.status_code == 400
+    assert res.json()["detail"] == f"Shipment cannot be assigned from status {status.value}"
 
 
 # ---------------- DELIVERY AGENT ----------------
