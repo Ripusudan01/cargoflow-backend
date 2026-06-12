@@ -1,4 +1,4 @@
-from contextlib import asynccontextmanager
+import asyncio
 from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException
@@ -9,15 +9,20 @@ from .rag_pipeline import CargoFlowRAG
 router = APIRouter()
 
 rag: Optional[CargoFlowRAG] = None
+rag_lock = asyncio.Lock()
 
 
-@asynccontextmanager
-async def lifespan(app):
+async def get_rag() -> CargoFlowRAG:
     global rag
-    print("[chatbot] Loading RAG pipeline...")
-    rag = CargoFlowRAG()
-    print("[chatbot] Ready.")
-    yield
+
+    if rag is not None:
+        return rag
+
+    async with rag_lock:
+        if rag is None:
+            rag = await asyncio.to_thread(CargoFlowRAG)
+
+    return rag
 
 
 # ── Schemas ─────────────────────────
@@ -44,10 +49,13 @@ class ChatResponse(BaseModel):
 @router.post("/chat", response_model=ChatResponse, tags=["Chatbot"])
 async def chat(request: ChatRequest):
 
-    if rag is None:
-        raise HTTPException(503, "Chatbot not initialized")
+    current_rag = await get_rag()
 
-    result = rag.query(request.question.strip(), top_k=request.top_k)
+    result = await asyncio.to_thread(
+        current_rag.query,
+        request.question.strip(),
+        top_k=request.top_k
+    )
 
     return ChatResponse(
         question=result["question"],
@@ -63,12 +71,11 @@ async def chat(request: ChatRequest):
 @router.post("/rebuild", tags=["Chatbot"])
 async def rebuild():
 
-    if rag is None:
-        raise HTTPException(503, "Chatbot not initialized")
+    current_rag = await get_rag()
 
-    rag.rebuild()
+    await asyncio.to_thread(current_rag.rebuild)
 
     return {
         "message": "Rebuilt successfully",
-        "chunks_loaded": len(rag.chunks),
+        "chunks_loaded": len(current_rag.chunks),
     }

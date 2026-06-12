@@ -8,8 +8,6 @@ from .routes import auth_routes, admin_routes, client_routes, agent_routes
 from .auth import hash_password
 
 from chatbot.app import router as chatbot_router
-import chatbot.app as chatbot_module
-from chatbot.rag_pipeline import CargoFlowRAG
 
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -58,8 +56,6 @@ def startup():
 
     finally:
         db.close()
-
-    chatbot_module.rag = CargoFlowRAG()
 
 @app.get("/health")
 def health():
