@@ -1,8 +1,11 @@
 import asyncio
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
+
+from app.auth import require_role
+from app.models import User, UserRole
 
 from .rag_pipeline import CargoFlowRAG
 
@@ -69,7 +72,7 @@ async def chat(request: ChatRequest):
 
 
 @router.post("/rebuild", tags=["Chatbot"])
-async def rebuild():
+async def rebuild(current_user: User = Depends(require_role(UserRole.ADMIN))):
 
     current_rag = await get_rag()
 

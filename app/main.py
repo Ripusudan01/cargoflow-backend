@@ -6,6 +6,7 @@ from .database import Base, engine, SessionLocal
 from .models import User, UserRole
 from .routes import auth_routes, admin_routes, client_routes, agent_routes
 from .auth import hash_password
+from .settings import require_env
 
 from chatbot.app import router as chatbot_router
 
@@ -41,14 +42,18 @@ def startup():
     db = SessionLocal()
 
     try:
+        admin_email = require_env("ADMIN_EMAIL")
+        admin_password = require_env("ADMIN_PASSWORD")
+        admin_phone = require_env("ADMIN_PHONE")
+
         admin = db.query(User).filter(User.role == UserRole.ADMIN).first()
 
         if not admin:
             new_admin = User(
                 name="Admin",
-                email=os.getenv("ADMIN_EMAIL"),
-                password_hash=hash_password(os.getenv("ADMIN_PASSWORD")),
-                phone=os.getenv("ADMIN_PHONE"),
+                email=admin_email,
+                password_hash=hash_password(admin_password),
+                phone=admin_phone,
                 role=UserRole.ADMIN,
                 is_active=True)
             db.add(new_admin)

@@ -8,7 +8,7 @@ from huggingface_hub import InferenceClient
 from app.database import SessionLocal
 from app.models import Shipment, TrackingUpdate
 
-from .embeddings import build_and_save, load, retrieve, get_model
+from .embeddings import FAISS_INDEX_PATH, build_and_save, load, retrieve, get_model
 
 load_dotenv()
 
@@ -129,7 +129,7 @@ def call_llm(context: str, question: str):
 class CargoFlowRAG:
 
     def __init__(self):
-        if not os.path.exists("chatbot/vector_store/index.faiss"):
+        if not os.path.exists(FAISS_INDEX_PATH):
             self.index, self.chunks, self.model = build_and_save()
         else:
             self.index, self.chunks = load()

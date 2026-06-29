@@ -1,5 +1,7 @@
 import pytest
 from chatbot import app as chatbot_app
+from fastapi.testclient import TestClient
+from app.main import app as main_app
 
 
 # ---------------- MOCK RAG ----------------
@@ -74,6 +76,13 @@ def test_rebuild_success(client):
     data = res.json()
     assert "message" in data
     assert "chunks_loaded" in data
+
+
+def test_rebuild_requires_auth():
+    with TestClient(main_app) as unauth_client:
+        res = unauth_client.post("/chatbot/rebuild")
+
+    assert res.status_code in [401, 403]
 
 
 # ---------------- ERROR CASE ----------------

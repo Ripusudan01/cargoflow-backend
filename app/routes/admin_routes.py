@@ -5,9 +5,10 @@ from ..database import get_db
 from ..models import *
 from ..schemas import DeliveryAgentCreate, AdminShipmentCreate, UserRegister, UpdateDeliveryAgent, UpdateClient
 from ..auth import require_role, hash_password
-from datetime import date, timezone
+from datetime import datetime, date, timezone
 import random
 from app.utils.email import send_email
+from uuid import uuid4
 
 router = APIRouter(prefix="/api/v1/admin", tags=["Admin Routes"])
 
@@ -68,7 +69,7 @@ def admin_dashboard(db: Session = Depends(get_db),
             "id": f"duty-{agent.id}",
             "type": "warning",
             "title": "Duty Request",
-            "message": f"Agent {agent.name} is requesting to go {agent.pending_duty_status.value}",
+            "message": f"Agent {agent.name} is requesting to go {getattr(agent.pending_duty_status, 'value', agent.pending_duty_status)}",
             "timestamp": "Action Required"
         })
 
@@ -97,17 +98,17 @@ def admin_dashboard(db: Session = Depends(get_db),
     }
 
 def generate_tracking_number(db: Session):
-    while True:
-        date_part = datetime.utcnow().strftime("%Y%m%d")
-        random_part = random.randint(1000, 9999)
-        tracking_number = f"CF-{date_part}-{random_part}"
+    return f"CF-{uuid4().hex[:12].upper()}"
 
-        existing = db.query(Shipment).filter(
-            Shipment.tracking_number == tracking_number
-        ).first()
 
-        if not existing:
-            return tracking_number
+def _normalize_pickup_date(pickup_date):
+    if pickup_date is None:
+        return None
+
+    if pickup_date.tzinfo is None:
+        return pickup_date.replace(tzinfo=timezone.utc)
+
+    return pickup_date.astimezone(timezone.utc)
 
 @router.post("/shipments", status_code=201)
 def create_shipment(data: AdminShipmentCreate,
@@ -128,7 +129,8 @@ def create_shipment(data: AdminShipmentCreate,
     if data.weight <= 0 or data.price <= 0:
         raise HTTPException(400, "Invalid weight or price")
 
-    if data.pickup_date and data.pickup_date < datetime.now(timezone.utc):
+    pickup_date = _normalize_pickup_date(data.pickup_date)
+    if pickup_date and pickup_date < datetime.now(timezone.utc):
         raise HTTPException(400, "Pickup date cannot be in the past")
 
     pickup = Address(
@@ -167,7 +169,7 @@ def create_shipment(data: AdminShipmentCreate,
 
         category=data.category,
         fragile=data.fragile,
-        pickup_date=data.pickup_date,
+        pickup_date=pickup_date,
         priority=data.priority,
 
         status=ShipmentStatus.CREATED
@@ -404,8 +406,8 @@ def admin_dashboard_agents(db: Session = Depends(get_db),
             "name": agent.name,
             "city": agent.city,
             "status": "Active" if agent.is_active else "Block",
-            "duty_status": agent.duty_status.value,
-            "pending_duty_status": agent.pending_duty_status.value if agent.pending_duty_status else None,
+            "duty_status": getattr(agent.duty_status, "value", None),
+            "pending_duty_status": getattr(agent.pending_duty_status, "value", None),
             "today_deliveries": today_deliveries,
             "total_deliveries": total_deliveries,
             "email": agent.email,

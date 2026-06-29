@@ -138,8 +138,16 @@ def agent_dashboard(db: Session = Depends(get_db),
         "agent": {
             "name": current_user.name,
             "phone": current_user.phone,
-            "duty_status": current_user.duty_status.value,
-            "pending_duty_status": current_user.pending_duty_status.value if current_user.pending_duty_status else None
+            "duty_status": (
+                getattr(current_user, "duty_status", None).value
+                if getattr(current_user, "duty_status", None)
+                else None
+            ),
+            "pending_duty_status": (
+                getattr(current_user, "pending_duty_status", None).value
+                if getattr(current_user, "pending_duty_status", None)
+                else None
+            )
         },
         "summary": {
             "completed": completed,
@@ -271,7 +279,11 @@ def update_location(data: LocationUpdate,
                     db: Session = Depends(get_db),
                     current_user: User = Depends(require_role(UserRole.DELIVERY_AGENT))):
 
-    lat, lng = get_lat_lng_from_pincode(data.pincode)
+    lat = data.lat
+    lng = data.lng
+
+    if lat is None or lng is None:
+        lat, lng = get_lat_lng_from_pincode(data.pincode)
 
     if lat is None or lng is None:
         raise HTTPException(400, "Invalid pincode")
@@ -300,7 +312,7 @@ def update_location(data: LocationUpdate,
     db.commit()
 
     return {
-        "message": "Location updated via pincode",
+        "message": "Location updated",
         "lat": lat,
         "lng": lng
     }

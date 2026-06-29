@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from pydantic import model_validator
 from typing import Optional
 from datetime import datetime
 from .models import PriorityLevel, ShipmentStatus, AgentDutyStatus, PaymentMethod
@@ -85,8 +86,17 @@ class ClientShipmentCreate(BaseModel):
     priority: Optional[PriorityLevel] = PriorityLevel.MEDIUM
 
 class LocationUpdate(BaseModel):
-    pincode: str
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+    pincode: Optional[str] = None
     shipment_id: Optional[int] = None
+
+    @model_validator(mode="after")
+    def validate_location(self):
+        if self.lat is None or self.lng is None:
+            if not self.pincode:
+                raise ValueError("Either lat/lng or pincode is required")
+        return self
 
 class BusinessCreate(BaseModel):
     name: str

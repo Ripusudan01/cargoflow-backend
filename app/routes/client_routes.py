@@ -1,4 +1,4 @@
-from datetime import timezone
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -10,6 +10,16 @@ from .admin_routes import generate_tracking_number
 from app.utils.email import send_email
 
 router = APIRouter(prefix="/api/v1/client", tags=["Client Routes"])
+
+def _normalize_pickup_date(pickup_date):
+    if pickup_date is None:
+        return None
+
+    if pickup_date.tzinfo is None:
+        return pickup_date.replace(tzinfo=timezone.utc)
+
+    return pickup_date.astimezone(timezone.utc)
+
 
 @router.get("/dashboard", status_code=200)
 def client_dashboard(db: Session = Depends(get_db),
@@ -160,7 +170,8 @@ def create_shipment(data: ClientShipmentCreate,
     if data.weight <= 0 or data.price <= 0:
         raise HTTPException(400, "Invalid weight or price")
 
-    if data.pickup_date and data.pickup_date < datetime.now(timezone.utc):
+    pickup_date = _normalize_pickup_date(data.pickup_date)
+    if pickup_date and pickup_date < datetime.now(timezone.utc):
         raise HTTPException(400, "Pickup date cannot be in the past")
 
     pickup = Address(
@@ -199,9 +210,9 @@ def create_shipment(data: ClientShipmentCreate,
         weight=data.weight,
         price=data.price,
 
-        category=business.type,
+        category=data.category if data.category is not None else business.type,
         fragile=data.fragile,
-        pickup_date=data.pickup_date,
+        pickup_date=pickup_date,
         priority=data.priority,
 
         status=ShipmentStatus.CREATED
